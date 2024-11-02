@@ -23,6 +23,6 @@ module.exports = {
     ],
   },
   plugins: ['prettier'],
-  ignorePatterns: ['extensions/utility.js'],
+  ignorePatterns: ['extensions/utility.js', 'src/решение_с_комментами.js'],
   noInlineConfig: true,
 };
