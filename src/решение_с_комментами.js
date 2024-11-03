@@ -154,3 +154,309 @@ function getSpiralMatrix(size) {
   console.log(arr.join('\n'));
   return arr;
 }
+
+
+
+sortByAsc([2, 9, 5, 4, 9, 11]);
+sortByAsc([1, 1, 1, 1, 1, 1]);
+const mas = [];
+const max = 1000;
+for (let i = 0; i < max; i += 1) {
+  mas.length += 1;
+  mas[mas.length - 1] = Math.floor(Math.random() * max);
+}
+console.log('mas', mas.join());
+
+sortByAsc(mas);
+
+/**
+ * Sorts an array of numbers in ascending order in place.
+ * Employ any sorting algorithm of your choice.
+ * Take into account that the array can be very large. Consider how you can optimize your solution.
+ * In this task, the use of methods of the Array and String classes is not allowed.
+ *
+ * @param {number[]} arr - The array to sort.
+ * @return {number[]} The sorted array.
+ *
+ * @example:
+ *  [2, 9, 5]       => [2, 5, 9]
+ *  [2, 9, 5, 9]    => [2, 5, 9, 9]
+ *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
+ */
+function sortByAsc(A) {
+  const arr = A;
+  console.log('function sortByAsc(A) Start arr:', arr.join());
+
+  if (arr.length <= 1) {
+    return arr;
+  }
+
+  let deepRec = 0;
+  const res = sort(arr);
+  console.log('function sortByAsc(A) res:', res.join());
+  console.log('function sortByAsc(A) arr.length', arr.length);
+  console.log('function sortByAsc(A) res.length', res.length);
+
+
+  function sort(ar) {
+    if (ar.length <= 1) {
+      return ar;
+    }
+    const arr = ar;
+
+    // разбить массив, выделить опорный элемент
+    const pivotIndex = getPivot2(arr);
+    // const pivotIndex = Math.floor(arr.length / 2);
+    const pivot = arr[pivotIndex];
+    console.log('arr.length::::', arr.length);
+
+
+    deepRec += 1;
+
+    const less = new Array();
+    const equalPivotArr = new Array();
+    const more = new Array();
+    let isSortLess = true;
+    let isSortMore = true;
+    for (let i = 0; i < arr.length; i += 1) {
+      // перекинуть влево от опорный элемент все что меньше его 
+      if (pivot > arr[i]) {
+        less.length += 1;
+        less[less.length - 1] = arr[i];
+        isSortLess = false;
+      }
+      // перекинуть вправо от опорный элемент все что больше его 
+      if (pivot < arr[i]) {
+        more.length += 1;
+        more[more.length - 1] = arr[i];
+        isSortMore = false;
+      }
+      if (pivot === arr[i] && pivotIndex !== i) {
+        equalPivotArr.length += 1;
+        equalPivotArr[equalPivotArr.length - 1] = arr[i];
+      }
+    }
+
+    // если не было перестановок элементов то массив отсортирован
+    if (isSortLess === true && isSortMore === true) {
+      const res = [...less, ...equalPivotArr, pivot, ...more];
+      console.log('Массив отсортирован', res.join());
+      return res;
+    }
+
+    // console.log('arr', arr);
+    // console.log('pivot', pivot);
+    // console.log('pivotIndex', pivotIndex);
+    // console.log('less', less);
+    // console.log('more', more);
+
+    let l = less;
+    if (isSortLess === false) {
+      l = sort(less);
+    }
+
+    let m = more;
+    if (isSortMore === false) {
+      m = sort(more);
+    }
+
+    return [...l, ...equalPivotArr, pivot, ...m];
+  }
+
+
+  console.log('Глубина рекурсии = ', deepRec);
+
+  return arr;
+
+  function getPivot(arr) {
+    console.log('getPivot(arr): arr.length', arr.length);
+
+    const aInd = Math.floor(Math.random() * (arr.length));
+    const a = arr[aInd];
+    const bInd = Math.floor(Math.random() * (arr.length));
+    const b = arr[bInd];
+    const cInd = Math.floor(Math.random() * (arr.length));
+    const c = arr[cInd];
+
+    console.log('a', a, 'aInd', aInd);
+    console.log('b', b, 'bInd', bInd);
+    console.log('c', c, 'cInd', cInd);
+
+    let median = null;
+
+    if (b <= a <= c || c <= a <= b) {
+      median = aInd;
+    }
+    if (a <= b <= c || c <= b <= a) {
+      median = bInd;
+    }
+    if (a <= c <= b || b <= c <= a) {
+      median = cInd;
+    }
+
+    console.log('return median:', arr[median], 'cInd', median);
+
+    return median;
+  }
+
+  function getPivot2(arr) {
+    console.log('getPivot(arr): arr.length', arr.length);
+
+    const aInd = Math.floor(Math.random() * (arr.length));
+    const a = arr[aInd];
+    const bInd = Math.floor(Math.random() * (arr.length));
+    const b = arr[bInd];
+    const cInd = Math.floor(Math.random() * (arr.length));
+    const c = arr[cInd];
+
+    console.log('a', a, 'aInd', aInd);
+    console.log('b', b, 'bInd', bInd);
+    console.log('c', c, 'cInd', cInd);
+
+    let median = null;
+
+    if (a <= Math.min(b, c)) {
+      let med = Math.min(b, c);
+      switch (med) {
+        case b:
+          median = bInd;
+          break;
+        case c:
+          median = cInd;
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (b <= Math.min(a, c)) {
+      let med = Math.min(a, c);
+      switch (med) {
+        case a:
+          median = aInd;
+          break;
+        case c:
+          median = cInd;
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (c <= Math.min(a, b)) {
+      let med = Math.min(a, b);
+      switch (med) {
+        case a:
+          median = aInd;
+          break;
+        case b:
+          median = bInd;
+          break;
+        default:
+          break;
+      }
+    }
+    console.log('return median:', arr[median], 'cInd', median);
+
+    return median;
+  }
+}
+
+/**
+ * Shuffles characters in a string so that the characters with an odd index are moved to the end of the string at each iteration.
+ * Take into account that the string can be very long and the number of iterations is large. Consider how you can optimize your solution.
+ * Usage of Array class methods is not allowed in this task.
+ *
+ * @param {string} str - The string to shuffle.
+ * @param {number} iterations - The number of iterations to perform the shuffle.
+ * @return {string} The shuffled string.
+ *
+ * @example:
+ *  '012345', 1 => '024135'
+ *  'qwerty', 1 => 'qetwry'
+ *  '012345', 2 => '024135' => '043215'
+ *  'qwerty', 2 => 'qetwry' => 'qtrewy'
+ *  '012345', 3 => '024135' => '043215' => '031425'
+ *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
+ */
+const hist = [];
+function shuffleChar(st1, iterations1) {
+  console.log('string:', st1);
+  console.log('iterations:', iterations1);
+
+  hist.length += 1;
+  hist[hist.length - 1] = st1;
+
+  for (let i = 0; i < hist.length; i += 1) {
+    console.log('hist:', hist[i]);
+  }
+
+  function inside(strOriginal, iterations) {
+    const it = iterations;
+
+    let str = strOriginal;
+    let str1 = '';
+    let str2 = '';
+    let isSave = true;
+    const hashValue = {};
+    let periodOriginalValue = 0;
+
+    for (let j = 0; j < it; j += 1) {
+      if (str.length % 2 === 0) {
+        for (let i = 1; i < str.length; i += 2) {
+          str2 += str[i];
+          str1 += str[i - 1];
+        }
+      } else {
+        for (let i = 1; i < str.length; i += 2) {
+          str2 += str[i];
+          str1 += str[i - 1];
+        }
+        str1 += str[str.length - 1];
+      }
+      str = str1 + str2;
+      str1 = '';
+      str2 = '';
+      if (isSave === true) {
+        hashValue[j + 1] = str;
+        // запомнить период повтора
+        periodOriginalValue = j + 1;
+      }
+      // закончить записывать значения строк в массив, тк потом идут повторы
+      if (str === strOriginal) {
+        // break;
+        isSave = false;
+      }
+    }
+    console.log(
+      'закончить записывать значения строк в массив, тк потом идут повторы'
+    );
+    console.log('str = ', str);
+    console.log('strOriginal=', strOriginal);
+    console.log(' период повтора:', periodOriginalValue);
+
+    // определить значение строки из сохранений
+    let index = it % periodOriginalValue;
+    if (index === 0) {
+      index = periodOriginalValue;
+    }
+
+    console.log('период сохранений:', periodOriginalValue);
+    console.log('индекс строки из сохранений:', index);
+    // получить значение
+    const strRes = hashValue[index];
+    console.log('str из кэш:', strRes);
+    console.log('str вычисленная:', str);
+    console.log('hashValue:', hashValue);
+
+    return str;
+  }
+
+  const result = inside(st1, iterations1);
+  console.log('result', result);
+
+  return result;
+}
+
+
+

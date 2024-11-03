@@ -660,8 +660,59 @@ function sortByAsc(A) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+const hist = [];
+function shuffleChar(st1, iterations1) {
+  hist.length += 1;
+  hist[hist.length - 1] = st1;
+
+  function inside(strOriginal, iterations) {
+    const it = iterations;
+
+    let str = strOriginal;
+    let str1 = '';
+    let str2 = '';
+    let isSave = true;
+    const hashValue = {};
+    let periodOriginalValue = 0;
+
+    for (let j = 0; j < it; j += 1) {
+      if (str.length % 2 === 0) {
+        for (let i = 1; i < str.length; i += 2) {
+          str2 += str[i];
+          str1 += str[i - 1];
+        }
+      } else {
+        for (let i = 1; i < str.length; i += 2) {
+          str2 += str[i];
+          str1 += str[i - 1];
+        }
+        str1 += str[str.length - 1];
+      }
+      str = str1 + str2;
+      str1 = '';
+      str2 = '';
+      if (isSave === true) {
+        hashValue[j + 1] = str;
+        periodOriginalValue = j + 1;
+      }
+      if (str === strOriginal) {
+        isSave = false;
+        break;
+      }
+    }
+
+    let index = it % periodOriginalValue;
+    if (index === 0) {
+      index = periodOriginalValue;
+    }
+
+    const strRes = hashValue[index];
+    return strRes;
+  }
+
+  const result = inside(st1, iterations1);
+
+  return result;
 }
 
 /**
