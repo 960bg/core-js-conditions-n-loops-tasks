@@ -460,3 +460,232 @@ function shuffleChar(st1, iterations1) {
 
 
 
+/**
+ * Returns the nearest largest integer consisting of the digits of the given positive integer.
+ * If there is no such number, it returns the original number.
+ * Usage of String class methods is not allowed in this task.
+ *
+ * @example:
+ * 12345    => 12354
+ * 123450   => 123504
+ * 12344    => 12434
+ * 123440   => 124034
+ * 1203450  => 1203504
+ * 90822    => 92028
+ * 321321   => 322113
+ *
+ * @param {number} number The source number
+ * @returns {number} The nearest larger number, or original number if none exists.
+ */
+function getNearestBigger(number) {
+  console.log('=================================');
+  console.log('function getNearestBigger(number)');
+  console.log('number:', number);
+  console.log('number.length:', `${number}`.length);
+
+  const numToArr = (num) => {
+    const mas = [];
+    for (let i = 0; i < `${num}`.length; i += 1) {
+      mas.length += 1;
+      mas[mas.length - 1] = Number(`${num}`[i]);
+    }
+    return mas;
+  };
+
+  const arrToNum = (arrNum) => {
+    let num = 0;
+    for (let i = 0; i < arrNum.length; i += 1) {
+      num += arrNum[arrNum.length - 1 - i] * 10 ** i;
+    }
+    console.log('arrToNum:', arrNum, '=>', 'num:', num);
+    return num;
+  };
+
+  const reverseArr = (arr) => {
+    const mas = [];
+    for (let i = 0; i < arr.length; i += 1) {
+      mas.length += 1;
+      mas[mas.length - 1] = arr[arr.length - 1 - i];
+    }
+    return mas;
+  };
+
+  const swap = (swapMas2, i1, i2) => {
+    const swapMas = swapMas2;
+    [swapMas[i1], swapMas[i2]] = [swapMas[i2], swapMas[i1]];
+  };
+
+  const findIndex = (arr, member) => {
+    let index = 0;
+    for (let i = 0; i < arr.length; i += 1) {
+      if (arr[arr.length - 1 - i] === member) {
+        index = arr.length - 1 - i;
+        break;
+      }
+    }
+    return index;
+  };
+
+  const numArr = numToArr(number);
+  console.log('numArr', numArr);
+
+  // sortByAsc(A);
+  const str = '';
+  console.log(reverseArr(str));
+  let biggest = NaN;
+  const currArr = [];
+  for (let i = numArr.length - 1; i >= 1; i -= 1) {
+    const curr = numArr[i];
+    const next = numArr[i - 1];
+    console.log(
+      'Сравниваем цифры:',
+      'текущая curr:',
+      curr,
+      'и следующая next',
+      next
+    );
+
+    // частный случай если на конце цифра больше чем ее сосед
+    if (i === numArr.length - 1) {
+      if (curr > next) {
+        console.log('curr > next:', curr > next);
+        console.log(
+          'Массив CurrMas До___ перестановки numArr.join',
+          numArr.join(', ')
+        );
+        swap(numArr, i, i - 1);
+        console.log(
+          'Массив CurrMas После перестановки numArr.join',
+          numArr.join(', ')
+        );
+        console.log('swap done: numArr:', numArr);
+        return arrToNum(numArr);
+      }
+      // currArr.length += 1;
+      // currArr[currArr.length - 1] = curr;
+    } else if (curr > next && currArr.length > 0) {
+      console.log(
+        'curr > next && currArr.length > 0',
+        curr > next && currArr.length > 0
+      );
+      console.log(
+        'Текущее зн больше след. и массив текущих зн не пустой currArr:',
+        currArr.join()
+      );
+      console.log('занести в массив текущих зн текущее значение curr,', curr);
+      console.log(
+        'потому что мы будем сравнивать след значение со значениями из currArr'
+      );
+      console.log('для поиска самого близкого большего зн из текущих');
+      console.log('массив текущих значений До___ занесения:', currArr);
+      currArr.length += 1;
+      currArr[currArr.length - 1] = curr;
+      console.log('массив текущих значений После занесения:', currArr);
+
+      console.log('+ Поиск самого близкого большего зн из текущих');
+      console.log('Сортируем массив CurArr');
+      console.log('currArr До___ сортировки', currArr.join(', '));
+      sortByAsc(currArr);
+      console.log('currArr После сортировки', currArr.join(', '));
+      console.log('перебираем все значения из массива');
+      for (let l = 0; l < currArr.length; l += 1) {
+        if (currArr[l] > next) {
+          console.log('нашли ближайшее большее зн из текущих:', currArr[l]);
+          console.log('next:', next);
+          biggest = currArr[l];
+          console.log(
+            'необходимо заменить в массиве currArr элемент biggest на значение Next'
+          );
+          console.log('тк Next в массиве numArr будет заменен на biggest');
+          console.log('массив currArr до___ замены', currArr.join());
+          currArr[l] = next;
+          console.log('массив currArr после замены', currArr.join());
+          break;
+        }
+      }
+
+      console.log(
+        'поменять местами в numArr тек зн с ближайшее большее зн из текущих знач'
+      );
+      console.log('меняем next', next, 'на biggest', biggest);
+
+      console.log(
+        'найти индекс biggest в массиве numArr для дальнейшей перестановки'
+      );
+      const indNumOfNumArr = findIndex(numArr, biggest);
+      console.log('нашли индекс biggest в массиве numArr:', indNumOfNumArr);
+
+      console.log('Выполняем перестановку', next, 'на biggest', biggest);
+      console.log(
+        'Массив numArr До___ перестановки numArr.join',
+        numArr.join(', ')
+      );
+      swap(numArr, i - 1, indNumOfNumArr);
+      console.log(
+        'Массив numArr После перестановки numArr.join',
+        numArr.join(', ')
+      );
+      console.log('swap done: numArr:', numArr);
+
+      console.log('Дальше нужно сортировать массив текущих зн  ');
+      console.log(
+        'и занести в numArr по восходящей все значения начиная с тек+1'
+      );
+      console.log('currArr До___ сортировки', currArr.join(', '));
+      sortByAsc(currArr);
+      console.log('currArr После сортировки', currArr.join(', '));
+
+      console.log('Вставляем цифры по возрастанию');
+      for (let k = 0; k < currArr.length; k += 1) {
+        console.log('Тек. цифра', currArr[k]);
+        console.log(
+          'Цифра в массиве numArr которую меняем на тек: ',
+          numArr[i + k]
+        );
+
+        numArr[i + k] = currArr[k];
+      }
+      console.log('Сформировали число', Number(numArr.join('')));
+      return Number(numArr.join(''));
+
+      // удалить посл цифру из currArr тк она была самая маленьк
+      // из всех из пройденных по масс numArr, и ее поменяли уже
+      //  при сравнении с текущей цифры(curr) и соседа(next)
+
+      // 1. проход с конца числа
+      // 2. если тек цифр > соседа -> меняем и возв рез-т работа окончена
+      // 3. если 2 п. не сработал то копим массив пройденных цифр с конца числа
+      // и когда встретится ситуация что тек цифр > соседа нужно выбрать
+      // из массива пройденных цифр самую маленьк и поменять с текущей
+      // удалить из массива пройденных цифр эту самую маленьк
+      // 4. далее та цифра что была соседом (которого поменяли) записывается
+      // в массив пройденных цифр, массив сортируем в возр порядке
+      // и начиная после тек позиции меняем числа исх массива на сортированный
+    }
+
+    console.log(
+      'curr > next && currArr.length > 0',
+      curr > next && currArr.length > 0
+    );
+    console.log(
+      'Текущее значение',
+      curr,
+      'меньше следующего',
+      next,
+      'значит заносим его в массив'
+    );
+    console.log(
+      'массив текущих значений до добавления тек зн:',
+      currArr.join()
+    );
+    currArr.length += 1;
+    currArr[currArr.length - 1] = curr;
+    console.log(
+      'массив текущих значений после добавления тек зн:',
+      currArr.join()
+    );
+  }
+
+  return number;
+}
+

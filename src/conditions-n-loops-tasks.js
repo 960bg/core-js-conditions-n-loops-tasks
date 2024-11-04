@@ -732,8 +732,97 @@ function shuffleChar(st1, iterations1) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+function getNearestBigger(number) {
+  const numToArr = (num) => {
+    const mas = [];
+    for (let i = 0; i < `${num}`.length; i += 1) {
+      mas.length += 1;
+      mas[mas.length - 1] = Number(`${num}`[i]);
+    }
+    return mas;
+  };
+
+  const arrToNum = (arrNum) => {
+    let num = 0;
+    for (let i = 0; i < arrNum.length; i += 1) {
+      num += arrNum[arrNum.length - 1 - i] * 10 ** i;
+    }
+    return num;
+  };
+
+  const reverseArr = (arr) => {
+    const mas = [];
+    for (let i = 0; i < arr.length; i += 1) {
+      mas.length += 1;
+      mas[mas.length - 1] = arr[arr.length - 1 - i];
+    }
+    return mas;
+  };
+  const str = '';
+  reverseArr(str);
+
+  const swap = (swapMas2, i1, i2) => {
+    const swapMas = swapMas2;
+    [swapMas[i1], swapMas[i2]] = [swapMas[i2], swapMas[i1]];
+  };
+
+  const findIndex = (arr, member) => {
+    let index = 0;
+    for (let i = 0; i < arr.length; i += 1) {
+      if (arr[arr.length - 1 - i] === member) {
+        index = arr.length - 1 - i;
+        break;
+      }
+    }
+    return index;
+  };
+
+  const numArr = numToArr(number);
+
+  let biggest = NaN;
+  const currArr = [];
+
+  for (let i = numArr.length - 1; i >= 1; i -= 1) {
+    const curr = numArr[i];
+    const next = numArr[i - 1];
+
+    if (i === numArr.length - 1) {
+      if (curr > next) {
+        swap(numArr, i, i - 1);
+
+        return arrToNum(numArr);
+      }
+    } else if (curr > next && currArr.length > 0) {
+      currArr.length += 1;
+      currArr[currArr.length - 1] = curr;
+
+      sortByAsc(currArr);
+
+      for (let l = 0; l < currArr.length; l += 1) {
+        if (currArr[l] > next) {
+          biggest = currArr[l];
+          currArr[l] = next;
+          break;
+        }
+      }
+
+      const indNumOfNumArr = findIndex(numArr, biggest);
+
+      swap(numArr, i - 1, indNumOfNumArr);
+
+      sortByAsc(currArr);
+
+      for (let k = 0; k < currArr.length; k += 1) {
+        numArr[i + k] = currArr[k];
+      }
+      return Number(numArr.join(''));
+    }
+
+    currArr.length += 1;
+    currArr[currArr.length - 1] = curr;
+  }
+
+  return number;
 }
 
 module.exports = {
